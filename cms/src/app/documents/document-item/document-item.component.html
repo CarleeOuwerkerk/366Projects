@@ -1,3 +1,12 @@
-<p>
-  document-item works!
-</p>
+<!--<a class="list-group-item clearfix documentDiv" >-->
+  <!--{{ document.name }}-->
+<!--</a>-->
+
+
+
+<a href="#" class="list-group-item clearfix documentDiv"
+   (click)="onSelectedDocument()">
+  <div class="pull-left">
+    <h5 class="list-group-item-heading">{{ document.name }}</h5>
+  </div>
+</a>
