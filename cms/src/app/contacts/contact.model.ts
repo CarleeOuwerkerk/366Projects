@@ -1,23 +1,23 @@
-export class Contact {
-  public contactID: string;
-  public name: string;
-  public email: string;
-  public phone: string;
-  public imageURL: string;
-  public group: string[];
+import {Injectable} from "@angular/core";
 
-  constructor(contactID: string
-              , name: string
-              , email: string
-              , phone: string
-              , imageURL: string
-              , group?: string[]
-  ){
-    this.contactID = contactID;
-    this.name = name;
-    this.email = email;
-    this.phone = phone;
-    this.imageURL = imageURL;
-    this.group = group;
+@Injectable()
+export class Contact {
+
+  constructor(public id: string,
+              public name: string,
+              public email: string,
+              public phone: string,
+              public imageUrl: string,
+              public group: Contact[]){
+
   }
+
+  // ){
+  //   this.contactID = contactID;
+  //   this.name = name;
+  //   this.email = email;
+  //   this.phone = phone;
+  //   this.imageURL = imageURL;
+  //   this.group = group;
+  // }
 }

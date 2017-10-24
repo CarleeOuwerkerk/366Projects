@@ -12,6 +12,7 @@ export class ContactDetailComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log(this.contact.imageUrl);
   }
 
 }
