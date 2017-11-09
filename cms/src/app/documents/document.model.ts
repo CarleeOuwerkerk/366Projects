@@ -3,7 +3,6 @@ export class Document {
   public name: string;
   public description: string;
   public url: string;
-  //public children: string;
   public children: string[];
 
   constructor(id: string,
@@ -11,8 +10,6 @@ export class Document {
               description: string,
               url: string,
               children?: string[]
-
-              // , children?: string[]
   ){
     this.id = id;
     this.name = name;

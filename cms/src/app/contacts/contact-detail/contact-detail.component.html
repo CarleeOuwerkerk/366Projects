@@ -15,8 +15,9 @@
 
   <div class="row pull-right">
     <div class="col-xs-12">
-      <button type="button" class="btn btn-primary">Edit</button>
-      <button type="button" class="btn btn-danger">Delete</button>
+      <a type="button" class="btn btn-primary"
+         [routerLink]="['edit']">Edit</a>
+      <a type="button" class="btn btn-danger" (click)="onDelete()">Delete</a>
     </div>
   </div>
 </div>

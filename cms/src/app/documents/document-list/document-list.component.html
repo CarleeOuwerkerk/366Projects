@@ -2,7 +2,8 @@
   <div class="panel-heading">
     <div class="row pad-left-right">
       <span class="pull-left title">Documents</span>
-      <button class="btn btn-success pull-right">Add Document</button>
+      <a class="btn btn-success pull-right"
+              [routerLink]="['new']">Add Document</a>
     </div>
   </div>
   <div class="panel panel-default">
@@ -12,8 +13,7 @@
           <h2>
             <cms-document-item
             *ngFor="let documentEl of documents"
-            [document]="documentEl"
-            (click)="onSelectedDocument(documentEl)">
+            [document]="documentEl">
             </cms-document-item>
           </h2>
         </div>

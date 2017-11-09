@@ -4,12 +4,6 @@
     </cms-document-list>
   </div>
   <div class="col-md-7">
-    <router-outlet
-      *ngIf="selectedDocument; else infoText"
-      [document]="selectedDocument">
-    </router-outlet>
-    <ng-template #infoText>
-      <h5>Please select a document.</h5>
-    </ng-template>
+    <router-outlet></router-outlet>
   </div>
 </div>
