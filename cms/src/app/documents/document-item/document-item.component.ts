@@ -11,21 +11,10 @@ export class DocumentItemComponent implements OnInit {
 
   @Input() document: Document;
   @Input() id: string;
-  // @Output() documentSelected = new EventEmitter<void>();
 
   constructor() { }
 
   ngOnInit() {
-    //
-    //   this.documentService.documentChangedEvent.subscribe(
-    //     (documents: Document[]) => {
-    //       this.documents = documents;
-    //     }
-    //   );
-    // }
-    // onSelectedDocument(){
-    //   this.documentSelected.emit();
-    // }
   }
 
 }

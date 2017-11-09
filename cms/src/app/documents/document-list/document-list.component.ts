@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 import {Document} from "../document.model";
 import {DocumentService} from "../document.service";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'cms-document-list',
@@ -9,8 +10,8 @@ import {DocumentService} from "../document.service";
   styleUrls: ['./document-list.component.css']
 })
 export class DocumentListComponent implements OnInit {
-
   documents: Document[] = [];
+  subscription: Subscription;
 
   constructor(private documentService: DocumentService) {
     this.documents = this.documentService.getDocuments();
@@ -22,5 +23,7 @@ export class DocumentListComponent implements OnInit {
       this.documents = documents;
       }
     );
+
+    this.documentService.documentListChangedEvent
   }
 }
