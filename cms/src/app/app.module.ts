@@ -26,6 +26,7 @@ import { DocumentStartComponent } from './documents/document-start/document-star
 import { WindRefService } from './wind-ref.service';
 import { ContactStartComponent } from './contacts/contact-start/contact-start.component';
 import { ContactEditComponent } from './contacts/contact-edit/contact-edit.component';
+import {DndModule} from "ng2-dnd";
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ContactEditComponent } from './contacts/contact-edit/contact-edit.compo
   imports: [
     BrowserModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    DndModule.forRoot()
   ],
   providers: [ContactService, DocumentService, MessageService, WindRefService],
   bootstrap: [AppComponent]
