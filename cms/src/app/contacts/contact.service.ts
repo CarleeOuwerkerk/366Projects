@@ -55,12 +55,9 @@ export class ContactService {
       return;
     }
 
-    // addition below
-    this.contacts = this.contacts.splice(pos, 1);
+    this.contacts.splice(pos, 1);
     let contactsListClone = this.contacts.slice();
     this.contactListChangedEvent.next(contactsListClone);
-    // this.contacts.splice(pos, 1);
-    // this.contactChangedEvent.emit(this.contacts.slice());
   }
 
   getMaxId(){

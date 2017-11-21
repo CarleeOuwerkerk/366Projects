@@ -40,11 +40,9 @@ export class DocumentService {
       return;
     }
     // addition below
-    this.documents = this.documents.splice(pos, 1);
+    this.documents.splice(pos, 1);
     let documentsListClone = this.documents.slice();
     this.documentListChangedEvent.next(documentsListClone);
-    // this.documents.splice(pos, 1);
-    // this.documentChangedEvent.emit(this.documents.slice());
   }
 
   getMaxId(){

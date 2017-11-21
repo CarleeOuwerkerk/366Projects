@@ -85,6 +85,7 @@ export class ContactEditComponent implements OnInit {
     let selectedContact: Contact = $event.dragData;
     this.invalidGroupContact = this.isInvalidContact(selectedContact);
     if (this.invalidGroupContact){
+      this.invalidGroupContact = true;
       return;
     }
     this.groupContacts.push(selectedContact);
