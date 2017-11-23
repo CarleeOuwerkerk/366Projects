@@ -2,6 +2,7 @@
   <div class="panel-body">
     <form id="contact-edit" #f="ngForm" (ngSubmit)="onsubmit(f)">
       <div class="row">
+
         <div class="col-sm-12 form-group">
           <label for="name">Name</label>
           <input
@@ -31,7 +32,8 @@
             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">
         </div>
 
-        <div *ngIf="!email.valid || !email.dirty">
+        <div class="alert alert-danger"
+         *ngIf="!email.valid && email.dirty">
         Enter a valid email address
         </div>
 
@@ -49,7 +51,8 @@
             pattern="\D*([2-9]\d{2})(\D*)([2-9]\d{2})(\D*)(\d{4})\D*">
         </div>
 
-        <div *ngIf="!phone.valid || !phone.dirty">
+        <div class="alert alert-danger"
+         *ngIf="!phone.valid && phone.dirty">
           Enter a valid phone number
         </div>
 
@@ -91,7 +94,7 @@
         You have already added this contact.
       </div>
 
-      <div class="alert alert-danger" *ngIf="!name.valid || name.untouched || !email.valid || !email.untouched">
+      <div class="alert alert-danger" *ngIf="(!name.valid && name.touched) || (!email.valid && email.touched)">
         The Name and Email are required.
       </div>
 

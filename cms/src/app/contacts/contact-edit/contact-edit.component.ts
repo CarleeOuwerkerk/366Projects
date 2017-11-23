@@ -48,7 +48,7 @@ export class ContactEditComponent implements OnInit {
 
   onSubmit(form: NgForm){
     const values = form.value;
-    const newContact = new Contact("7", values.name, values.email, values.phone, values.imageUrl);
+    const newContact = new Contact("7", values.name, values.email, values.phone, values.imageUrl, this.groupContacts);
 
     if (this.editMode == true){
       this.contactService.updateContact(this.originalContact, newContact);
@@ -57,7 +57,7 @@ export class ContactEditComponent implements OnInit {
       this.contactService.addContact(newContact);
     }
 
-    this.router.navigate(['contacts'], {relativeTo: this.route});
+    this.router.navigate(['/contacts'], {relativeTo: this.route});
   }
 
   onCancel(){
