@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div *ngIf="contact.group != null" class="row" style="padding: 20px">
+<div *ngIf="contact.group != empty" class="row" style="padding: 20px">
   <h4><b>Group Contacts</b></h4>
 
   <cms-contact-item
