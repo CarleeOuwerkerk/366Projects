@@ -3,6 +3,7 @@ import {EventEmitter, Injectable} from '@angular/core';
 import { Contact} from "./contact.model";
 import { MOCKCONTACTS} from "./MOCKCONTACTS";
 import {Subject} from "rxjs/Subject";
+import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class ContactService {
@@ -72,7 +73,7 @@ export class ContactService {
   }
 
   addContact(newContact: Contact){
-    if (newContact == null){
+    if (isNullOrUndefined(newContact)){
       return;
     }
     this.maxContactId++;
@@ -83,7 +84,7 @@ export class ContactService {
   }
 
   updateContact(originalContact: Contact, newContact: Contact){
-    if ((originalContact == null) || (newContact == null)){
+    if ((isNullOrUndefined(originalContact)) || (isNullOrUndefined(newContact))){
       return;
     }
 

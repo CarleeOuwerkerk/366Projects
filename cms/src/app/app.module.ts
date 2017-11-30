@@ -27,6 +27,7 @@ import { WindRefService } from './wind-ref.service';
 import { ContactStartComponent } from './contacts/contact-start/contact-start.component';
 import { ContactEditComponent } from './contacts/contact-edit/contact-edit.component';
 import {DndModule} from "ng2-dnd";
+import { ContactsFilterPipe } from './contacts/contacts-filter.pipe';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import {DndModule} from "ng2-dnd";
     DocumentStartComponent,
     ContactStartComponent,
     ContactEditComponent,
+    ContactsFilterPipe,
   ],
   imports: [
     BrowserModule,

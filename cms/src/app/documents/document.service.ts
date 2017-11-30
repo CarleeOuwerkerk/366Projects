@@ -1,9 +1,11 @@
 import {EventEmitter, Injectable} from '@angular/core';
 
-import { MOCKDOCUMENTS} from "./MOCKDOCUMENTS";
+import {MOCKDOCUMENTS} from "./MOCKDOCUMENTS";
 import {Document} from "./document.model";
 import {Subject} from "rxjs/Subject";
 import {current} from "codelyzer/util/syntaxKind";
+import {Http} from "@angular/http";
+import {subscribeOn} from "rxjs/operator/subscribeOn";
 
 @Injectable()
 export class DocumentService {
@@ -12,19 +14,20 @@ export class DocumentService {
   documentChangedEvent = new EventEmitter<Document[]>();
   documentListChangedEvent = new Subject<Document[]>();
   maxDocumentId: number;
+  private http: Http;
 
   constructor() {
     this.documents = MOCKDOCUMENTS;
     this.maxDocumentId = this.getMaxId();
   }
 
-  getDocuments(): Document[]{
+  getDocuments(): Document[] {
     return this.documents.slice();
   }
 
-  getDocument(id: string): Document{
-    for (let document of this.documents){
-      if (document.id == id){
+  getDocument(id: string): Document {
+    for (let document of this.documents) {
+      if (document.id == id) {
         return document;
       }
     }
@@ -45,7 +48,7 @@ export class DocumentService {
     this.documentListChangedEvent.next(documentsListClone);
   }
 
-  getMaxId(){
+  getMaxId() {
     let maxId: number = 0;
     for (let document of this.documents) {
       let currentId = parseInt(document.id)
@@ -56,8 +59,8 @@ export class DocumentService {
     return maxId;
   }
 
-  addDocument(newDocument: Document){
-    if (newDocument == null){
+  addDocument(newDocument: Document) {
+    if (newDocument == null) {
       return;
     }
     this.maxDocumentId++;
@@ -68,8 +71,8 @@ export class DocumentService {
 
   }
 
-  updateDocument(originalDocument: Document, newDocument: Document){
-    if ((originalDocument == null) || (newDocument == null)){
+  updateDocument(originalDocument: Document, newDocument: Document) {
+    if ((originalDocument == null) || (newDocument == null)) {
       return;
     }
 
@@ -83,4 +86,27 @@ export class DocumentService {
     this.documentListChangedEvent.next(documentsListClone);
   }
 
+  // initDocuments(){
+  //   this.http.get('https://carleemurphycms.firebaseio.com/documents.json')
+  //     .subscribe(
+  //       (response: Response) => {
+  //         const documents: Document[] = response.json();
+  //
+  //       }
+  //     );
+  // }
+  //
+  // initDocuments(){
+  //   this.http.get('https://carleemurphycms.firebaseio.com/documents.json')
+  //     .map(
+  //       (response: Response) => {
+  //         const documents: Document[] = response.json();
+  // return documents;
+  //
+  //       }
+  //     )
+  // .subscribe(
+  // (documents:Document[]) = {
+  // this.documents = documents;
+  // }
 }
