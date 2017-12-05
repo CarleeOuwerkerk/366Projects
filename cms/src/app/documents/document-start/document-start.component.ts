@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'cms-document-start',
@@ -7,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DocumentStartComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

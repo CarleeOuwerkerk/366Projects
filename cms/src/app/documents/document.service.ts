@@ -1,11 +1,8 @@
 import {EventEmitter, Injectable} from '@angular/core';
-
-import {MOCKDOCUMENTS} from "./MOCKDOCUMENTS";
+import {Http, Response, Headers} from "@angular/http";
 import {Document} from "./document.model";
 import {Subject} from "rxjs/Subject";
-import {current} from "codelyzer/util/syntaxKind";
-import {Http} from "@angular/http";
-import {subscribeOn} from "rxjs/operator/subscribeOn";
+import "rxjs/add/operator/map";
 
 @Injectable()
 export class DocumentService {
@@ -14,11 +11,9 @@ export class DocumentService {
   documentChangedEvent = new EventEmitter<Document[]>();
   documentListChangedEvent = new Subject<Document[]>();
   maxDocumentId: number;
-  private http: Http;
 
-  constructor() {
-    this.documents = MOCKDOCUMENTS;
-    this.maxDocumentId = this.getMaxId();
+  constructor(private http: Http) {
+    this.initDocuments();
   }
 
   getDocuments(): Document[] {
@@ -45,7 +40,7 @@ export class DocumentService {
     // addition below
     this.documents.splice(pos, 1);
     let documentsListClone = this.documents.slice();
-    this.documentListChangedEvent.next(documentsListClone);
+    this.storeDocuments();
   }
 
   getMaxId() {
@@ -67,7 +62,7 @@ export class DocumentService {
     newDocument.id = String(this.maxDocumentId);
     this.documents.push(newDocument);
     let documentsListClone = this.documents.slice()
-    this.documentListChangedEvent.next(documentsListClone)
+    this.storeDocuments();
 
   }
 
@@ -75,7 +70,6 @@ export class DocumentService {
     if ((originalDocument == null) || (newDocument == null)) {
       return;
     }
-
     let pos = this.documents.indexOf(originalDocument)
     if (pos < 0) {
       return;
@@ -83,30 +77,36 @@ export class DocumentService {
     newDocument.id = originalDocument.id;
     this.documents[pos] = newDocument;
     let documentsListClone = this.documents.slice();
-    this.documentListChangedEvent.next(documentsListClone);
+    this.storeDocuments();
   }
 
-  // initDocuments(){
-  //   this.http.get('https://carleemurphycms.firebaseio.com/documents.json')
-  //     .subscribe(
-  //       (response: Response) => {
-  //         const documents: Document[] = response.json();
-  //
-  //       }
-  //     );
-  // }
-  //
-  // initDocuments(){
-  //   this.http.get('https://carleemurphycms.firebaseio.com/documents.json')
-  //     .map(
-  //       (response: Response) => {
-  //         const documents: Document[] = response.json();
-  // return documents;
-  //
-  //       }
-  //     )
-  // .subscribe(
-  // (documents:Document[]) = {
-  // this.documents = documents;
-  // }
+  storeDocuments() {
+    const headers = new Headers({'Content-Type': 'application/json'});
+    return this.http.put('https://carleemurphycms.firebaseio.com/documents.json',
+      this.getDocuments(),
+      {headers})
+      // JSON.stringify(this.documents)
+      .subscribe(
+        () => {
+          this.documentListChangedEvent.next(this.documents.slice());
+        }
+      );
+  }
+
+  initDocuments() {
+    this.http.get('https://carleemurphycms.firebaseio.com/documents.json')
+      .map(
+        (response: Response) => {
+          const documents: Document[] = response.json();
+          return documents;
+        }
+      )
+      .subscribe(
+        (documentsReturned: Document[]) => {
+          this.documents = documentsReturned;
+          this.maxDocumentId = this.getMaxId();
+          this.documentListChangedEvent.next(this.documents.slice());
+        }
+      )
+  }
 }

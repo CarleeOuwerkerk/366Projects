@@ -1,9 +1,10 @@
 import {EventEmitter, Injectable} from '@angular/core';
-
 import { Contact} from "./contact.model";
 import { MOCKCONTACTS} from "./MOCKCONTACTS";
 import {Subject} from "rxjs/Subject";
 import {isNullOrUndefined} from "util";
+import {Http, Response, Headers} from "@angular/http";
+import "rxjs/add/operator/map";
 
 @Injectable()
 export class ContactService {
@@ -15,11 +16,8 @@ export class ContactService {
 
   currentContact = null;
 
-  constructor() {
-    this.contacts = MOCKCONTACTS;
-    this.contacts = this.contacts.sort(this.sortContacts);
-    this.currentContact = this.getContact(this.currentContact);
-    this.maxContactId = this.getMaxId();
+  constructor(private http: Http) {
+    this.initContacts()
   }
 
   getContacts(): Contact[]{
@@ -55,10 +53,9 @@ export class ContactService {
     if (pos < 0) {
       return;
     }
-
     this.contacts.splice(pos, 1);
     let contactsListClone = this.contacts.slice();
-    this.contactListChangedEvent.next(contactsListClone);
+    this.storeContacts();
   }
 
   getMaxId(){
@@ -80,7 +77,7 @@ export class ContactService {
     newContact.id = String(this.maxContactId);
     this.contacts.push(newContact);
     let contactsListClone = this.contacts.slice()
-    this.contactListChangedEvent.next(contactsListClone)
+    this.storeContacts();
   }
 
   updateContact(originalContact: Contact, newContact: Contact){
@@ -95,7 +92,37 @@ export class ContactService {
     newContact.id = originalContact.id;
     this.contacts[pos] = newContact;
     let contactsListClone = this.contacts.slice();
-    this.contactListChangedEvent.next(contactsListClone);
+    this.storeContacts();
   }
 
+  storeContacts() {
+    const headers = new Headers({'Content-Type': 'application/json'});
+    return this.http.put('https://carleemurphycms.firebaseio.com/contacts.json',
+      this.getContacts(),
+      {headers})
+    // JSON.stringify(this.documents)
+      .subscribe(
+        () => {
+          this.contactListChangedEvent.next(this.contacts.slice());
+        }
+      );
+  }
+
+  initContacts() {
+    this.http.get('https://carleemurphycms.firebaseio.com/contacts.json')
+      .map(
+        (response: Response) => {
+          const contacts: Contact[] = response.json();
+          return contacts;
+        }
+      )
+      .subscribe(
+        (contactsReturned: Contact[]) => {
+          this.contacts = contactsReturned;
+          this.contacts = this.contacts.sort(this.sortContacts);
+          this.maxContactId = this.getMaxId();
+          this.contactListChangedEvent.next(this.contacts.slice());
+        }
+      )
+  }
 }
