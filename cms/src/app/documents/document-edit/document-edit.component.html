@@ -25,6 +25,8 @@
             id="description"
             name="description"
             class="form-control"
+            [ngModel]="document?.description"
+            #description="ngModel"
             size="120"
             max="255">
         </div>

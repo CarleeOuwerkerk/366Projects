@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {ContactService} from "./contacts/contact.service";
 
 @Component({
   selector: 'cms-root',
@@ -8,4 +9,8 @@ import { Component } from '@angular/core';
 export class AppComponent {
 
   name = '';
+
+  constructor(private contactService: ContactService){
+
+  }
 }

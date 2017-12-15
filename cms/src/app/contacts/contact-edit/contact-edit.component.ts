@@ -65,11 +65,15 @@ export class ContactEditComponent implements OnInit {
   }
 
   isInvalidContact(newContact: Contact){
+    if (this.editMode == false){
+      return false;
+    }
+
     if (!newContact){
       return true;
     }
 
-    if (newContact.id == this.contact.id){
+    if (this.contact.id && newContact.id == this.contact.id){
       return true;
     }
 

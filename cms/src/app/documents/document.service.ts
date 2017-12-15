@@ -33,14 +33,16 @@ export class DocumentService {
     if (document === null) {
       return;
     }
-    const pos = this.documents.indexOf(document);
-    if (pos < 0) {
-      return;
-    }
-    // addition below
-    this.documents.splice(pos, 1);
-    let documentsListClone = this.documents.slice();
-    this.storeDocuments();
+    this.http.delete('http://localhost:3000/documents/' + document.id)
+      .map(
+        (response: Response) => {
+          return response.json().obj;
+        })
+      .subscribe(
+        (documents: Document[]) => {
+          this.documents = documents;
+          this.documentListChangedEvent.next(this.documents.slice());
+        });
   }
 
   getMaxId() {
@@ -58,43 +60,66 @@ export class DocumentService {
     if (newDocument == null) {
       return;
     }
-    this.maxDocumentId++;
-    newDocument.id = String(this.maxDocumentId);
-    this.documents.push(newDocument);
-    let documentsListClone = this.documents.slice()
-    this.storeDocuments();
-
+    const headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+    newDocument.id = '';
+    const strDocument = JSON.stringify(newDocument);
+    this.http.post('http://localhost:3000/documents/',
+      strDocument,
+      {headers: headers})
+      .map(
+        (response: Response) => {
+          return response.json().obj;
+        })
+      .subscribe(
+        (documents: Document[]) => {
+          this.documents = documents;
+          this.documentListChangedEvent.next(this.documents.slice());
+        });
   }
 
   updateDocument(originalDocument: Document, newDocument: Document) {
     if ((originalDocument == null) || (newDocument == null)) {
       return;
     }
-    let pos = this.documents.indexOf(originalDocument)
+    const pos = this.documents.indexOf(originalDocument);
     if (pos < 0) {
       return;
     }
-    newDocument.id = originalDocument.id;
-    this.documents[pos] = newDocument;
-    let documentsListClone = this.documents.slice();
-    this.storeDocuments();
+    const headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+    const strDocument = JSON.stringify(newDocument);
+    this.http.patch('http://localhost:3000/documents/' + originalDocument.id,
+      strDocument,
+      {headers: headers})
+      .map(
+        (response: Response) => {
+          return response.json().obj;
+        })
+      .subscribe(
+        (documents: Document[]) => {
+          this.documents = documents;
+          this.documentListChangedEvent.next(this.documents.slice());
+        });
   }
 
-  storeDocuments() {
-    const headers = new Headers({'Content-Type': 'application/json'});
-    return this.http.put('https://carleemurphycms.firebaseio.com/documents.json',
-      this.getDocuments(),
-      {headers})
-      // JSON.stringify(this.documents)
-      .subscribe(
-        () => {
-          this.documentListChangedEvent.next(this.documents.slice());
-        }
-      );
-  }
+  // storeDocuments() {
+  //   const headers = new Headers({'Content-Type': 'application/json'});
+  //   return this.http.put('https://carleemurphycms.firebaseio.com/documents.json',
+  //     this.getDocuments(),
+  //     {headers})
+  //     // JSON.stringify(this.documents)
+  //     .subscribe(
+  //       () => {
+  //         this.documentListChangedEvent.next(this.documents.slice());
+  //       }
+  //     );
+  // }
 
   initDocuments() {
-    this.http.get('https://carleemurphycms.firebaseio.com/documents.json')
+    this.http.get('http://localhost:3000/documents')
       .map(
         (response: Response) => {
           const documents: Document[] = response.json();
@@ -102,8 +127,8 @@ export class DocumentService {
         }
       )
       .subscribe(
-        (documentsReturned: Document[]) => {
-          this.documents = documentsReturned;
+        (documentsReturned: any) => {
+          this.documents = documentsReturned.obj;
           this.maxDocumentId = this.getMaxId();
           this.documentListChangedEvent.next(this.documents.slice());
         }

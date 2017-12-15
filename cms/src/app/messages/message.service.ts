@@ -8,6 +8,7 @@ export class MessageService {
   private messages: Message[] = [];
   messageChangeEvent = new EventEmitter<Message[]>();
   maxMessageId: number;
+  currentSender: string = '7';
 
   constructor(private http: Http) {
     this.initMessages()
@@ -37,14 +38,33 @@ export class MessageService {
     return null;
   }
 
-  addMessage(message: Message){
-    this.messages.push(message);
-    this.storeMessages();
+  addMessage(newMessage: Message) {
+    if (newMessage == null) {
+      return;
+    }
+    const headers = new Headers({
+      'Content-Type': 'application/json'
+    });
+    newMessage.id = '';
+    // newMessage.sender = this.currentSender;
+    const strMessage = JSON.stringify(newMessage);
+    this.http.post('http://localhost:3000/messages/',
+      strMessage,
+      {headers: headers})
+      .map(
+        (response: Response) => {
+          return response.json().obj;
+        })
+      .subscribe(
+        (messages: Message[]) => {
+          this.messages = messages;
+          this.messageChangeEvent.next(this.messages.slice());
+        });
   }
 
   storeMessages() {
     const headers = new Headers({'Content-Type': 'application/json'});
-    return this.http.put('https://carleemurphycms.firebaseio.com/messages.json',
+    return this.http.put('http://localhost:3000/messages',
       this.getMessages(),
       {headers})
     // JSON.stringify(this.documents)
@@ -56,7 +76,7 @@ export class MessageService {
   }
 
   initMessages() {
-    this.http.get('https://carleemurphycms.firebaseio.com/messages.json')
+    this.http.get('http://localhost:3000/messages')
       .map(
         (response: Response) => {
           const messages: Message[] = response.json();
@@ -64,8 +84,8 @@ export class MessageService {
         }
       )
       .subscribe(
-        (messagesReturned: Message[]) => {
-          this.messages = messagesReturned;
+        (messagesReturned: any) => {
+          this.messages = messagesReturned.obj;
           this.maxMessageId = this.getMaxId();
           this.messageChangeEvent.next(this.messages.slice());
         }
